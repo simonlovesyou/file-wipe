@@ -3,3 +3,10 @@ node_modules
 
 # Test folder
 test/
+
+# index.js for testing
+modules/index.js
+
+# Compiled test file
+dist/index.js
+dist/index.js.map
