@@ -2,7 +2,7 @@
   "name": "file-wipe",
   "version": "1.0.0",
   "description": "Completely wipe a file from the file system",
-  "main": "file-wipe.js",
+  "main": "dist/file-wipe.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
