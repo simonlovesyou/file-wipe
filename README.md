@@ -2,8 +2,6 @@
 
 A npm module for wiping a file from the file system *completely* so that it cannot be retrieved later with file retrieval programs.
 
-The method of wiping the file is based off on https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html
-
 ## Introduction
 The method of wiping the file is based off on https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html
 
