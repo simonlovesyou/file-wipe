@@ -47,7 +47,7 @@ Regular callbacks can be used with ES6 as well.
 Pull requests are welcome! I need help to setup a good test suite. 
 
 ## License
-MIT (See License.txt)
+MIT (See LICENSE.txt)
 
 ## Author
 
