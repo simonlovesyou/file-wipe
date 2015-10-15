@@ -3,7 +3,7 @@
 A npm module for wiping a file from the file system *completely* so that it cannot be retrieved later with file retrieval programs.
  
 ## Introduction
-The method of wiping the file is based off on the paper by Peter Gutmann [Secure Deletion of Data from Magnetic and Solid-State Memory](https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html)
+The method used of wiping the file from the hard drive as described by Peter Gutmann in his paper [Secure Deletion of Data from Magnetic and Solid-State Memory](https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html)
 
 The file, before being deleted, is overwritten by a defined set of bytes, as specified in the above reference. This will make the file headers and file contents unrecognizeable through different kinds of magnetic hard drives. 
 
