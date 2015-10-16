@@ -47,7 +47,7 @@ Regular callbacks can be used with ES6 as well.
 Pull requests are welcome! I need help to setup a good test suite. 
 
 ## Disclaimer
-Due to how *Solid State Drives* (SSD) store and retrive data this method will not work on an SSD. Please see [Reliably Erasing Data From Flash-Based Solid State Drives](https://www.usenix.org/legacy/events/fast11/tech/full_papers/Wei.pdf). 
+Due to how *Solid State Drives* (SSD) store and retrieve data this method will not work on an SSD. Please see [Reliably Erasing Data From Flash-Based Solid State Drives](https://www.usenix.org/legacy/events/fast11/tech/full_papers/Wei.pdf). 
 
 I cannot completely **guarantee** that any file will be completely wiped from the magnetic hard drive. The results may wary on different machines, but this method should make file retrieval, at least, more difficult. 
 
