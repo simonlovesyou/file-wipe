@@ -41,28 +41,24 @@ const passes = {
   ]
 }
 
-const wipe = ((file, cb) => {
-  return fs.statAsync(file).then(stats => {
-
-    let noBytes = stats.size;
+const wipe = ((file, cb) => fs.statAsync(file)
+                            .then(stats => {
+    let noBytes         = stats.size,
+        randomPasses    = [];
     passes.DETERMINSTIC = shuffle(passes.DETERMINSTIC);
-    let randomPasses = [];
+    
+
     for(var i = 0; i < 7; i++) {
       randomPasses.push(secureRandom(noBytes, {type: 'Buffer'}));
     }
-    iter(0, file, noBytes, randomPasses.slice(0, 3))
-    .then(() => {
-      return iter(0, file, noBytes, passes.DETERMINSTIC);
-    }).then(() => {
-      return iter(0, file, noBytes, randomPasses.slice(4,7));
-    }).then(() => {
-      return fs.unlinkAsync(file);
-    })
-    .then(() => {
-      return new Promise((resolve, reject) => {
-        resolve();
-      })
-    }); 
+    return iter(0, file, noBytes, randomPasses.slice(0, 3))
+    .then(() => iter(0, file, noBytes, passes.DETERMINSTIC))
+    .then(() => iter(0, file, noBytes, randomPasses.slice(4,7)))
+    .then(() => fs.unlinkAsync(file))
+    .then(() => new Promise((resolve, reject) => {
+      resolve();
+    }))
+    .catch(err => err); 
   })
   .then(() => {
     if(cb && typeof cb === 'function') {
@@ -78,8 +74,7 @@ const wipe = ((file, cb) => {
     } else return new Promise((resolve, reject) => {
       reject(err);
     });
-  })
-});
+  }));
 
 function iter(i, file, noBytes, passes) {
   let ws = bluePromise.promisifyAll(fs.createWriteStream(file, {flags: 'w'}));
