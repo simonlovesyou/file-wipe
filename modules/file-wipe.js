@@ -2,7 +2,6 @@
 import secureRandom from 'secure-random';
 import bluePromise from 'bluebird';
 const fs = bluePromise.promisifyAll(require('fs'));
-import async from 'async';
 import shuffle from 'array-shuffle';
 
 const passes = {
