@@ -2,7 +2,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     "babel": {
       options: {
-        sourceMap: true
+        sourceMap: false
       },
       dist: {
         files: [
@@ -32,7 +32,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-eslint');
-  
+
   grunt.registerTask("default", ["babel", "watch"]);
   grunt.registerTask("lint", "eslint");
   grunt.registerTask("deploy", "babel");
