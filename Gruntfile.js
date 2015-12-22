@@ -15,6 +15,9 @@ module.exports = function(grunt) {
         }]
       }
     },
+    eslint: {
+      target: ["./modules/**/*.js"]
+    },
     watch: {
       babel: {
         files: ['./**/*.js'],
@@ -28,5 +31,8 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-eslint');
+
   grunt.registerTask("default", ["babel", "watch"]);
+  grunt.registerTask("lint", "eslint");
 };
