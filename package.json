@@ -4,7 +4,9 @@
   "description": "Completely wipe a file from the file system",
   "main": "dist/file-wipe.js",
   "scripts": {
-    "test": "test/main.js"
+    "test": "mocha test/main.js --timeout 30000",
+    "lint": "grunt lint",
+    "deploy": "grunt deploy"
   },
   "repository": {
     "type": "git",
