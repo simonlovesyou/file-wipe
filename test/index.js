@@ -6,9 +6,7 @@ import bluebird from 'bluebird';
 import wipe from '../dist/file-wipe';
 bluebird.promisifyAll(fs);
 
-
 const exampleFile = path.join(process.cwd(), 'example.txt');
-
 
 test.before(async t => {
   //Create some random data
