@@ -50,7 +50,7 @@ Regular callbacks can be used with ES6 as well.
 
 ## Contribution
 
-Pull requests are welcome! I need help to setup a good test suite. 
+Pull requests are welcome! 
 
 <br>
 

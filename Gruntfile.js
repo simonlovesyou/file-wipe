@@ -26,14 +26,19 @@ module.exports = function(grunt) {
           spawn: false,
         }
       }
+    },
+    ava: {
+      target: ['test/*.spec.js']
     }
   });
 
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-ava');
 
-  grunt.registerTask("default", ["babel", "watch"]);
+  grunt.registerTask("default", ["test", "watch"]);
+  grunt.registerTask("test", ["lint", "babel", "ava"]);
   grunt.registerTask("lint", "eslint");
   grunt.registerTask("deploy", "babel");
 };
