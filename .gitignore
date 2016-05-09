@@ -1,9 +1,6 @@
 #node_modules
 node_modules
 
-# Test folder
-test/
-
 # index.js for testing
 modules/index.js
 
