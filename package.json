@@ -1,6 +1,6 @@
 {
   "name": "file-wipe",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Completely wipe a file from the file system",
   "main": "dist/file-wipe.js",
   "scripts": {
