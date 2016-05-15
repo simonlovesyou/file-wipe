@@ -10,7 +10,8 @@
 	    "blockBindings": true,
 	    "modules": true,
 	    "templateStrings": true,
-	    "objectLiteralShorthandProperties": true
+	    "objectLiteralShorthandProperties": true,
+        "experimentalObjectRestSpread": true
     },
 	// 0 - turn rule off
 	// 1 - rule generates warnings

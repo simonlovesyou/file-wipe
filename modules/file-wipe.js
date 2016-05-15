@@ -3,6 +3,7 @@ import secureRandom from 'secure-random';
 import bluePromise from 'bluebird';
 const fs = bluePromise.promisifyAll(require('fs'));
 import shuffle from 'array-shuffle';
+import glob from 'glob';
 
 const passes = {
                       /* 1  random */ /* 32  random */
@@ -41,53 +42,91 @@ const passes = {
   ]
 }
 
-const wipe = ((file, cb) => fs.statAsync(file)
-                            .then(stats => {
-  let noBytes         = stats.size,
-      randomPasses    = [];
-  passes.DETERMINSTIC = shuffle(passes.DETERMINSTIC);
 
-  for(let i = 0; i < 7; i++) {
-    randomPasses.push(secureRandom(noBytes, {type: 'Buffer'}));
-  }
-  return iter(0, file, noBytes, randomPasses.slice(0, 3))
-  .then(() => iter(0, file, noBytes, passes.DETERMINSTIC))
-  .then(() => iter(0, file, noBytes, randomPasses.slice(4,7)))
-  .then(() => fs.unlinkAsync(file))
-  .catch(err => err);
-})
-.then(() => {
-  if(cb && typeof cb === 'function') {
-    return cb(null);
-  }
-  return new Promise((resolve, reject) => {
-    resolve();
-  });
-})
-.catch(err => {
-  if(cb && typeof cb === 'function') {
-    return cb(err)
-  }
-  return new Promise((resolve, reject) => {
-    reject(err);
-  });
-}));
+const wipe = (files, callback) => {
 
-function iter(i, file, noBytes, passes) {
-  let ws = bluePromise.promisifyAll(fs.createWriteStream(file, {flags: 'w'}));
-  let buf = Buffer.isBuffer(passes) ? passes[i] : (new Buffer(noBytes, {type: 'hex'})).fill(passes[i]);
+  if(files === undefined || files === null) {
+    throw new Error('Parameter "files" needs to specified. Got ' + typeof files);
+  }
+  if(typeof files !== 'string' && !(files instanceof Array)) {
+    throw new Error('Parameter "files" needs to be a string or array. Got ' + typeof files);
+  }
+  if(typeof callback !== 'function' && callback !== undefined) {
+    throw new Error('Parameter "callback" needs to be a function, null or undefined. Got ' + typeof callback);
+  }
 
-  return ws.writeAsync((new Buffer(noBytes, {type: 'hex'})).fill(passes[i]))
-  .then(() => fs.writeFileAsync(file, ''))
+
+  return _getFileMatches(files) 
+  .each(_wipeFile)    
   .then(() => {
-    if(i < passes.length) {
-      return iter(++i, file, noBytes, passes);
+      if(callback) {
+        return callback(null);
+      }
+      return;
+    })
+  .catch(err => {
+    if(callback) {
+      return callback(err);
     }
-    return new Promise((resolve, reject) => {
-      return resolve();
-    });
-  })
-  .catch(err => err);
+    throw err;
+  });
+}
+
+const _getFileMatches = (files) => {
+
+  return new bluePromise((resolve, reject) => {
+    if(files instanceof Array) {
+      return resolve(files);
+    }
+    return glob(files, (err, matches) => {
+      if(err) {
+        return reject(err);
+      }
+      return resolve(matches);
+    })
+  });
+}
+
+
+const _wipeFile = (file) => {
+  return fs.statAsync(file)
+  .then(stats => {
+
+    let noBytes             = stats.size,
+        randomPasses        = [],
+        allPasses           = [],
+        shuffledPasses      = shuffle(passes.DETERMINSTIC);
+
+    for(let i = 0; i < 7; i++) {
+      randomPasses.push(secureRandom(noBytes, {type: 'Buffer'}));
+    }
+
+    allPasses = [...randomPasses.slice(0, 3), ...shuffledPasses, ...randomPasses.slice(4, 7)]
+
+    let applyPass = _applyPassGen(file, noBytes);
+
+    return new bluePromise((resolve) => {
+      resolve(allPasses)
+    })
+    .each(applyPass)
+    .then(() => fs.unlinkAsync(file))
+    .catch(err => {throw err;});
+
+  }); 
+}
+
+const _applyPassGen = (file, noBytes) => {
+
+  let ws = bluePromise.promisifyAll(fs.createWriteStream(file, {flags: 'w'}));
+
+  return (pass) => {
+
+    let buf = Buffer.isBuffer(pass) ? pass : (new Buffer(noBytes, {type: 'hex'})).fill(pass);
+
+    return ws.writeAsync(buf)
+          .then(() => fs.writeFileAsync(file, ''))
+          .catch(err => {throw err});
+  }
 }
 
 module.exports = wipe;

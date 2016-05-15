@@ -1,13 +1,13 @@
 # file-wipe
 
-A npm module for wiping a file from the file system *completely* so that it cannot be retrieved later with file retrieval programs.
+A npm module for securely wiping files off the file system *completely* so that it cannot be retrieved later with file retrieval programs.
  
 <br>
  
 ## Introduction
-The method used of wiping the file from the hard drive as described by Peter Gutmann in his paper [Secure Deletion of Data from Magnetic and Solid-State Memory](https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html)
+The method used of wiping the file from the hard drive can be found in Peter Gutmann's paper [Secure Deletion of Data from Magnetic and Solid-State Memory](https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html)
 
-The file, before being deleted, is overwritten by a defined set of bytes, as specified in the above reference. This will make the file headers and file contents unrecognizeable through different kinds of magnetic hard drives. 
+The file/s, before being deleted, is overwritten by a defined set of bytes, as specified in the above reference. This will make the file headers and file contents unrecognizeable through different kinds of magnetic hard drives. 
 
 <br>
 
@@ -46,7 +46,32 @@ wipe('file.exe', function() {
 
 Regular callbacks can be used with ES6 as well.
 
+File globbing is supported
+
+```js
+wipe('./sensitive-data/*')
+.then(() => {
+	console.log("Sensitive files wiped.")
+})
+```
+
+
 <br>
+
+##Documentation
+
+### wipe([files [, callback]]) 
+
+Will run the callback or return a promise when all files specified have been wiped.
+
+**Parameters**
+
+**files**: `string|array` The files to be wiped. A string or an array of strings. 
+
+**callback**: `function`, `(OPTIONAL)` The callback to be executed when the file/s have been wiped.
+
+**Returns**: `Promise | undefined`, A promise with the result or undefined if a callback has been provided to the function
+
 
 ## Contribution
 

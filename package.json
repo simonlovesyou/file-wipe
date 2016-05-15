@@ -6,8 +6,7 @@
   "scripts": {
     "test": "grunt test",
     "lint": "grunt lint",
-    "deploy": "grunt deploy",
-    "hacked-test": "mocha test/main.js --timeout 30000"
+    "deploy": "grunt deploy"
   },
   "repository": {
     "type": "git",
@@ -35,6 +34,7 @@
   "dependencies": {
     "array-shuffle": "^1.0.0",
     "bluebird": "^2.10.2",
+    "glob": "^7.0.3",
     "secure-random": "^1.1.1"
   },
   "devDependencies": {

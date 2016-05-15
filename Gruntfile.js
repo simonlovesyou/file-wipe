@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     },
     watch: {
       babel: {
-        files: ['./**/*.js'],
+        files: ['./modules/*.js'],
         tasks: ['babel'],
         options: {
           spawn: false,
@@ -40,5 +40,6 @@ module.exports = function(grunt) {
   grunt.registerTask("default", ["test", "watch"]);
   grunt.registerTask("test", ["lint", "babel", "ava"]);
   grunt.registerTask("lint", "eslint");
+  grunt.registerTask("dev", ["babel", "watch"]);
   grunt.registerTask("deploy", "babel");
 };
