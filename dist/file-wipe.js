@@ -74,7 +74,7 @@ var wipe = function wipe(files, callback) {
     if (callback) {
       return callback(null);
     }
-    return;
+    return undefined;
   })['catch'](function (err) {
     if (callback) {
       return callback(err);

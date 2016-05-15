@@ -56,13 +56,13 @@ const wipe = (files, callback) => {
   }
 
 
-  return _getFileMatches(files) 
-  .each(_wipeFile)    
+  return _getFileMatches(files)
+  .each(_wipeFile)
   .then(() => {
       if(callback) {
         return callback(null);
       }
-      return;
+      return undefined;
     })
   .catch(err => {
     if(callback) {
@@ -112,7 +112,7 @@ const _wipeFile = (file) => {
     .then(() => fs.unlinkAsync(file))
     .catch(err => {throw err;});
 
-  }); 
+  });
 }
 
 const _applyPassGen = (file, noBytes) => {
