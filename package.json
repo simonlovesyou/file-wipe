@@ -44,6 +44,7 @@
     "grunt-babel": "^5.0.3",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^17.3.1",
-    "path-exists": "^3.0.0"
+    "path-exists": "^3.0.0",
+    "temp-write": "^2.1.0"
   }
 }
