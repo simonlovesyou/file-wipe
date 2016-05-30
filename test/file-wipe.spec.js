@@ -59,7 +59,7 @@ test('wiping file with tap callback function', async t => {
     }
   }
 
-  //Make sure the example file exists.
+  //Make sure the example files exists.
   t.true(pathExists.sync(fileNameA));
   t.true(pathExists.sync(fileNameB));
 
