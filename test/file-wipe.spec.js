@@ -6,9 +6,10 @@ import bluebird from 'bluebird';
 import wipe from '../dist/file-wipe';
 import pathExists from 'path-exists';
 import glob from 'glob';
+const tempWrite = require('temp-write');
 bluebird.promisifyAll(fs);
 
-//Remove all example files. 
+//Remove all example files.
 const _rmExampleFiles = () => glob('example\d*.txt', (err, files) => {
   if(err) {
     throw err;
@@ -16,17 +17,12 @@ const _rmExampleFiles = () => glob('example\d*.txt', (err, files) => {
   files.forEach(file => fs.unlink(file));
 })
 
-//Write some data to an example file.  
-const _writeExampleFile = (file) => fs.writeFileAsync(file, secureRandom(1337, {type: 'Buffer'}))
-
-//Remove the example files if the lib fails to wipe it. 
+//Remove the example files if the lib fails to wipe it.
 test.after(_rmExampleFiles);
 
 test('wiping file with promise', async t => {
 
-  let fileName = 'example1.txt';
-
-  await _writeExampleFile(fileName)
+  let fileName = tempWrite.sync(secureRandom(1337, {type: 'Buffer'}));
 
   //Make sure the example file exists.
   t.true(pathExists.sync(fileName));
@@ -40,9 +36,7 @@ test('wiping file with promise', async t => {
 
 test('wiping with callback', async t => {
 
-  let fileName = 'example2.txt';
-
-  await _writeExampleFile(fileName)
+  let fileName = tempWrite.sync(secureRandom(1337, {type: 'Buffer'}));
 
   //Make sure the example file exists.
   t.true(pathExists.sync(fileName));
