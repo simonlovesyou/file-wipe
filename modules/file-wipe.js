@@ -98,7 +98,7 @@ const _getFileMatches = (files) => {
 }
 
 
-const _wipeFile = (file) => {
+const _wipeFile = (file, tap) => {
   return fs.statAsync(file)
   .then(stats => {
 
@@ -113,30 +113,25 @@ const _wipeFile = (file) => {
 
     allPasses = [...randomPasses.slice(0, 3), ...shuffledPasses, ...randomPasses.slice(4, 7)]
 
-    let applyPass = _applyPassGen(file, noBytes);
-
     return new bluePromise((resolve) => {
       resolve(allPasses)
     })
-    .each(applyPass)
+    .each(pass => _applyPass(file, noBytes, pass))
     .then(() => fs.unlinkAsync(file))
     .catch(err => {throw err;});
 
   });
 }
 
-const _applyPassGen = (file, noBytes) => {
+const _applyPass = (file, noBytes, pass) => {
 
   let ws = bluePromise.promisifyAll(fs.createWriteStream(file, {flags: 'w'}));
 
-  return (pass) => {
+  let buf = Buffer.isBuffer(pass) ? pass : (new Buffer(noBytes, {type: 'hex'})).fill(pass);
 
-    let buf = Buffer.isBuffer(pass) ? pass : (new Buffer(noBytes, {type: 'hex'})).fill(pass);
-
-    return ws.writeAsync(buf)
-          .then(() => fs.writeFileAsync(file, ''))
-          .catch(err => {throw err});
-  }
+  return ws.writeAsync(buf)
+        .then(() => fs.writeFileAsync(file, ''))
+        .catch(err => {throw err});
 }
 
 module.exports = wipe;
