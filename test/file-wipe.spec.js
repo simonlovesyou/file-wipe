@@ -73,6 +73,28 @@ test('wiping file with tap callback function', async t => {
   })
 });
 
+test('wiping file without unlinking', async t => {
+
+  let fileName = tempWrite.sync(secureRandom(1337, {type: 'Buffer'}));
+
+  let options = {
+    unlink: false
+  }
+
+  //Make sure the example file exists.
+  t.true(pathExists.sync(fileName));
+
+  await wipe(fileName, options, function(err) {
+    if(err) {
+      //Fail the test if file-wipe returns an error.
+      return t.fail();
+    }
+
+    t.true(pathExists.sync(fileName));
+    fs.unlinkAsync(fileName);
+  })
+});
+
 
 test('invalid args', async t => {
 
