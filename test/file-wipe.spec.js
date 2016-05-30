@@ -78,6 +78,7 @@ test('invalid args', async t => {
 
   t.throws(() => wipe(), 'Parameter "files" needs to specified. Got undefined');
   t.throws(() => wipe({}), 'Parameter "files" needs to be a string or array. Got object');
-  t.throws(() => wipe('', {}), 'Parameter "callback" needs to be a function, null or undefined. Got object');
+  t.throws(() => wipe('', {}, {}), 'Parameter "callback" needs to be a function, null or undefined. Got object');
+  t.throws(() => wipe('', ''), 'Parameter "options" needs to be an object. Got string');
 
 });
