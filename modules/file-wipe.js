@@ -43,7 +43,17 @@ const passes = {
 }
 
 
-const wipe = (files, callback) => {
+const wipe = (files, options, callback) => {
+
+  //Handle if the options parameter is omitted.
+  if(callback === undefined && (typeof options === 'function' || options === undefined)) {
+    callback = options;
+    options = {};
+  }
+
+  if(typeof options !== 'object') {
+    throw new Error('Parameter "options" needs to be an object. Got ' + typeof options);
+  }
 
   if(files === undefined || files === null) {
     throw new Error('Parameter "files" needs to specified. Got ' + typeof files);
