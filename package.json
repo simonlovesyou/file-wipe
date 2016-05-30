@@ -17,7 +17,9 @@
     "npm",
     "file",
     "wipe",
-    "erase"
+    "erase",
+    "srm",
+    "secure"
   ],
   "author": "@simonlovesyou",
   "contributors": [
