@@ -67,16 +67,16 @@ const wipe = (files, options, callback) => {
 
 
   return _getFileMatches(files)
-  .each(_wipeFile)
-  .then(() => {
+  .each((file) => _wipeFile(file))
+  .then(files => {
       if(callback) {
-        return callback(null);
+        return callback(files);
       }
-      return undefined;
+      return files;
     })
   .catch(err => {
     if(callback) {
-      return callback(err);
+      return callback(err, null);
     }
     throw err;
   });
