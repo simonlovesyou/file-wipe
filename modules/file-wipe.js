@@ -66,9 +66,10 @@ const wipe = (files, options, callback) => {
   }
 
   const tap = options.tap || function () {};
+  const unlink = options.unlink === undefined ? true : options.unlink;
 
   return _getFileMatches(files)
-  .each((file) => _wipeFile(file, tap))
+  .each((file) => _wipeFile(file, tap, unlink))
   .then(files => {
       if(callback) {
         return callback(files);
@@ -99,7 +100,7 @@ const _getFileMatches = (files) => {
 }
 
 
-const _wipeFile = (file, tap) => {
+const _wipeFile = (file, tap, unlink) => {
   return fs.statAsync(file)
   .then(stats => {
 
@@ -118,7 +119,12 @@ const _wipeFile = (file, tap) => {
       resolve(allPasses)
     })
     .each(pass => _applyPass(file, noBytes, pass))
-    .then(() => fs.unlinkAsync(file))
+    .then(() => {
+      if(unlink) {
+        fs.unlinkAsync(file);
+      }
+      return file;
+    })
     .then((file) => tap(file))
     .catch(err => {throw err;});
 
