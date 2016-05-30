@@ -62,7 +62,7 @@ const options = {
 	tap: (file) => {console.log("Wiped %s", file)}, //Provide a tap function
 	unlink: false //If the file should be unlinked after it has been wiped. Defaults to true
 }
-wipe('./temp-files/*')
+wipe('./temp-files/*', options)
 .then((files) => {
 	console.log("Files wiped:");
 	console.log(files);
