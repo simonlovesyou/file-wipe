@@ -9,17 +9,6 @@ import glob from 'glob';
 const tempWrite = require('temp-write');
 bluebird.promisifyAll(fs);
 
-//Remove all example files.
-const _rmExampleFiles = () => glob('example\d*.txt', (err, files) => {
-  if(err) {
-    throw err;
-  }
-  files.forEach(file => fs.unlink(file));
-})
-
-//Remove the example files if the lib fails to wipe it.
-test.after(_rmExampleFiles);
-
 test('wiping file with promise', async t => {
 
   let fileName = tempWrite.sync(secureRandom(1337, {type: 'Buffer'}));
