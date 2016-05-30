@@ -58,7 +58,17 @@ var passes = {
   ]
 };
 
-var wipe = function wipe(files, callback) {
+var wipe = function wipe(files, options, callback) {
+
+  //Handle if the options parameter is omitted.
+  if (callback === undefined && (typeof options === 'function' || options === undefined)) {
+    callback = options;
+    options = {};
+  }
+
+  if (typeof options !== 'object') {
+    throw new Error('Parameter "options" needs to be an object. Got ' + typeof options);
+  }
 
   if (files === undefined || files === null) {
     throw new Error('Parameter "files" needs to specified. Got ' + typeof files);
@@ -70,14 +80,19 @@ var wipe = function wipe(files, callback) {
     throw new Error('Parameter "callback" needs to be a function, null or undefined. Got ' + typeof callback);
   }
 
-  return _getFileMatches(files).each(_wipeFile).then(function () {
+  var tap = options.tap || function () {};
+  var unlink = options.unlink === undefined ? true : options.unlink;
+
+  return _getFileMatches(files).each(function (file) {
+    return _wipeFile(file, tap, unlink);
+  }).then(function (files) {
     if (callback) {
-      return callback(null);
+      return callback(null, files);
     }
-    return undefined;
+    return files;
   })['catch'](function (err) {
     if (callback) {
-      return callback(err);
+      return callback(err, null);
     }
     throw err;
   });
@@ -98,7 +113,7 @@ var _getFileMatches = function _getFileMatches(files) {
   });
 };
 
-var _wipeFile = function _wipeFile(file) {
+var _wipeFile = function _wipeFile(file, tap, unlink) {
   return fs.statAsync(file).then(function (stats) {
 
     var noBytes = stats.size,
@@ -112,32 +127,34 @@ var _wipeFile = function _wipeFile(file) {
 
     allPasses = [].concat(_toConsumableArray(randomPasses.slice(0, 3)), _toConsumableArray(shuffledPasses), _toConsumableArray(randomPasses.slice(4, 7)));
 
-    var applyPass = _applyPassGen(file, noBytes);
-
     return new _bluebird2['default'](function (resolve) {
       resolve(allPasses);
-    }).each(applyPass).then(function () {
-      return fs.unlinkAsync(file);
+    }).each(function (pass) {
+      return _applyPass(file, noBytes, pass);
+    }).then(function () {
+      if (unlink) {
+        fs.unlinkAsync(file);
+      }
+      return file;
+    }).then(function (file) {
+      return tap(file);
     })['catch'](function (err) {
       throw err;
     });
   });
 };
 
-var _applyPassGen = function _applyPassGen(file, noBytes) {
+var _applyPass = function _applyPass(file, noBytes, pass) {
 
   var ws = _bluebird2['default'].promisifyAll(fs.createWriteStream(file, { flags: 'w' }));
 
-  return function (pass) {
+  var buf = Buffer.isBuffer(pass) ? pass : new Buffer(noBytes, { type: 'hex' }).fill(pass);
 
-    var buf = Buffer.isBuffer(pass) ? pass : new Buffer(noBytes, { type: 'hex' }).fill(pass);
-
-    return ws.writeAsync(buf).then(function () {
-      return fs.writeFileAsync(file, '');
-    })['catch'](function (err) {
-      throw err;
-    });
-  };
+  return ws.writeAsync(buf).then(function () {
+    return fs.writeFileAsync(file, '');
+  })['catch'](function (err) {
+    throw err;
+  });
 };
 
 module.exports = wipe;
