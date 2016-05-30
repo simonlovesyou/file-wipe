@@ -2,16 +2,20 @@
     "env": {
         "node": true
     },
-    "ecmaFeatures": {
-    	"arrowFunctions": true,
-        "arrow-spacing": { "before": true, "after": true },
-       	"arrow-parens": false,
-	    "prefer-const": true,
-	    "blockBindings": true,
-	    "modules": true,
-	    "templateStrings": true,
-	    "objectLiteralShorthandProperties": true,
-        "experimentalObjectRestSpread": true
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "modules": true,
+            "arrowFunctions": true,
+            "arrow-spacing": { "before": true, "after": true },
+            "arrow-parens": false,
+            "prefer-const": true,
+            "blockBindings": true,
+            "templateStrings": true,
+            "objectLiteralShorthandProperties": true,
+            "experimentalObjectRestSpread": true,
+        },
     },
 	// 0 - turn rule off
 	// 1 - rule generates warnings
