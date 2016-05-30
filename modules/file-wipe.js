@@ -65,9 +65,10 @@ const wipe = (files, options, callback) => {
     throw new Error('Parameter "callback" needs to be a function, null or undefined. Got ' + typeof callback);
   }
 
+  const tap = options.tap || function () {};
 
   return _getFileMatches(files)
-  .each((file) => _wipeFile(file))
+  .each((file) => _wipeFile(file, tap))
   .then(files => {
       if(callback) {
         return callback(files);
@@ -118,6 +119,7 @@ const _wipeFile = (file, tap) => {
     })
     .each(pass => _applyPass(file, noBytes, pass))
     .then(() => fs.unlinkAsync(file))
+    .then((file) => tap(file))
     .catch(err => {throw err;});
 
   });
