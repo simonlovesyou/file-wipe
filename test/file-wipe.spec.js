@@ -39,6 +39,40 @@ test('wiping with callback', async t => {
   })
 });
 
+test('wiping file with tap callback function', async t => {
+
+  let fileCount = 0;
+
+  let fileNameA = tempWrite.sync(secureRandom(1337, {type: 'Buffer'}));
+  let fileNameB = tempWrite.sync(secureRandom(1337, {type: 'Buffer'}));
+
+  let files = [fileNameA, fileNameB];
+
+  let options = {
+    tap: function(file) {
+      let compare = (fileName) => fileName === file
+
+      if(files.some(compare)) {
+        files = files.filter(compare);
+        fileCount++;
+      }
+    }
+  }
+
+  //Make sure the example file exists.
+  t.true(pathExists.sync(fileNameA));
+  t.true(pathExists.sync(fileNameB));
+
+  await wipe(files, options, function(err) {
+    if(err) {
+      //Fail the test if file-wipe returns an error.
+      return t.fail();
+    }
+
+    return t.true(fileCount === files.length);
+  })
+});
+
 
 test('invalid args', async t => {
 
