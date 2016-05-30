@@ -72,7 +72,7 @@ const wipe = (files, options, callback) => {
   .each((file) => _wipeFile(file, tap, unlink))
   .then(files => {
       if(callback) {
-        return callback(files);
+        return callback(null, files);
       }
       return files;
     })
