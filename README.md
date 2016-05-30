@@ -24,11 +24,12 @@ In your application:
 ```js
 import wipe from 'file-wipe';
 
-wipe('file.exe').then(() => {
-	console.log("File completely erased!");
+wipe('file.exe')
+.then((file) => {
+	console.log("File %s completely erased!", file);
 })
 .catch(err => {
-	throw new Error(err);
+	throw err;
 });
 ```
 ### ES5
@@ -37,30 +38,44 @@ or if you prefer the classical use of callbacks:
 ```js
 var wipe = require('file-wipe');
 
-wipe('file.exe', function() {
+wipe('file.exe', function(err, file) {
 	if(err)
-		throw new Error(err);
+		throw err;
 	console.log("File completely erased!");
 });
 ```
-
-Regular callbacks can be used with ES6 as well.
 
 File globbing is supported
 
 ```js
 wipe('./sensitive-data/*')
-.then(() => {
-	console.log("Sensitive files wiped.")
+.then((files) => {
+	console.log("Wiped files:");
+	console.log(files);
+});
+```
+
+Pass an options object
+
+```js
+const options = {
+	tap: (file) => {console.log("Wiped %s", file)}, //Provide a tap function
+	unlink: false //If the file should be unlinked after it has been wiped. Defaults to true
+}
+wipe('./temp-files/*')
+.then((files) => {
+	console.log("Files wiped:");
+	console.log(files);
 })
 ```
+
 
 
 <br>
 
 ##Documentation
 
-### wipe([files [, callback]]) 
+### wipe(files [, options, [, callback]]) 
 
 Will run the callback or return a promise when all files specified have been wiped.
 
@@ -68,9 +83,15 @@ Will run the callback or return a promise when all files specified have been wip
 
 **files**: `string|array` The files to be wiped. A string or an array of strings. 
 
+**options**: `object` `(OPTIONAL)`
+
+**options.unlink**: `boolean` `(OPTIONAL)` If the files should be unlinked after wipe passes has been applied. Defaults to ``true``
+
+**options.tap**: `function` `(OPTIONAL)` A function to be called after each file has been wiped. 
+
 **callback**: `function`, `(OPTIONAL)` The callback to be executed when the file/s have been wiped.
 
-**Returns**: `Promise | undefined`, A promise with the result or undefined if a callback has been provided to the function
+**Returns**: `Promise`, A promise with an array of files wiped.
 
 
 ## Contribution
